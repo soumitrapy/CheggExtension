@@ -54,7 +54,7 @@ function notify(){
                options: {title: 'Question available',
                          message: 'v2',
                          type: 'basic',
-                         iconUrl: 'chrome.png'}
+                         iconUrl: 'data/chrome.png'}
                    };
 
     setTimeout(() => {

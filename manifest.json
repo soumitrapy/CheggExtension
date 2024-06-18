@@ -3,7 +3,7 @@
     "name": "Chegg-dev",
     "version": "0.2",
     "icons": {
-        "128": "red128.png"
+        "128": "data/green128.png"
      },
     "content_scripts": [
         {
