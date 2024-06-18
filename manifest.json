@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "Chegg-dev",
+    "version": "0.2",
+    "icons": {
+        "128": "red128.png"
+     },
+    "content_scripts": [
+        {
+            "js": ["content.js"],
+            "matches": [
+                "https://expert.chegg.com/*"
+            ]
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions":["activeTab","notifications","offscreen"]
+}
