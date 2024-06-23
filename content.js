@@ -21,7 +21,7 @@ const skipclass = "sc-1eq90u-9";
 const ansclass = "sc-1eq90u-8";
 const submitclass = "juIrVM";
 let submitButton;
-const waitingSeconds = 10;
+const waitingSeconds = 5;
 
 // I can solve,but div      id = "skip-radio-box_A_015"  id="skip-radio-box_D_040"
 // I cannot div     id = "skip-radio-box_A_016"
@@ -49,12 +49,21 @@ function check(classname = skipclass){
 
 function notify(){
     console.log("Inside load eventListener");
+    try{
+        if(navigator.brave.isBrave()){
+            notification_image = 'data/brave.png';
+        }
+    }catch(e)
+    {
+        notification_image = 'data/chrome.png';
+    }
+
     message = {type: 'notification',
                sound: true,
                options: {title: 'Question available',
                          message: 'v2',
                          type: 'basic',
-                         iconUrl: 'data/chrome.png'}
+                         iconUrl: notification_image}
                    };
 
     setTimeout(() => {
@@ -67,13 +76,11 @@ function notify(){
 }
 window.addEventListener("load", notify);
 
-
-
-function select(e)
+function select2(e)
 {
     console.log(e,e.key);
     if (document.getElementsByClassName(submitclass).length > 0){
-        document.removeEventListener("keyup",select);
+        document.removeEventListener("keyup",select2);
         console.log("keyup EventListener removed.");
         return;
     }
@@ -82,53 +89,122 @@ function select(e)
     }
     let k = e.key;
     console.log(`${k} pressed`);
-
-    if(k === 'Enter'){
-        let rsnSubmitBtn = document.getElementById(rsnSubmit);
-        if(rsnSubmitBtn){
-            rsnSubmitBtn.click();
-            }
-        return;
-    }
-    let ch = choice+String(map[k]);
-    let rsn = sReason+String(String(map[k]));
-
-    //for ease of use
-    if(ch==="skip_radio_label_0"){
-        ch = "skip_radio_label_4";}
-    else if(ch==="skip_radio_label_4"){
-        ch = "skip_radio_label_0";}
-
-
-    let choiceBtn = document.getElementById(ch);
-    let rsnBtn = document.getElementById(rsn);
-    if(choiceBtn){
-        choiceBtn.click();
-        }
-    else if(rsnBtn){
-        rsnBtn.click();
-        }
-    else if(k==='j'){
+    let skiptimeout;
+    if(k==='j'){
         let skipBtn = document.getElementsByClassName(skipclass)[0];
         skipBtn.click();
-        }
+
+        skiptimeout = setTimeout(() => {
+            let rsn = sReason+"1";
+            console.log(rsn);
+            let rsnBtn = document.getElementById(rsn);
+            console.log(rsnBtn);
+            if(rsnBtn){rsnBtn.click();}
+
+            setTimeout(() => {
+                let ch = "skip_radio_label_4";
+                let chBtn = document.getElementById(ch);
+                if(chBtn){chBtn.click();}
+                
+                setTimeout(() => {
+                    let rsnSubmitBtn = document.getElementById(rsnSubmit);
+                    console.log(rsnSubmitBtn);
+                    if(rsnSubmitBtn){rsnSubmitBtn.click();}
+                }, waitingSeconds*100);  
+            }, waitingSeconds*100);
+
+        }, waitingSeconds*200);
+
+        
+
+        
+          
+    }
     else if(k==='k'){
+        //if(skiptimeout){
+        clearTimeout(skiptimeout);
         let ansButton = document.getElementsByClassName(ansclass)[0];
         ansButton.click();
-        document.removeEventListener("keyup", select);
+        document.removeEventListener("keyup", select2);
+        
         setTimeout(() => {
             submitButton = document.getElementsByClassName(submitclass)[0];
             console.log(`submit button is ${submitButton}`);
-        }, waitingSeconds*1000);
-        submitButton.addEventListener("click", () => {console.log("keyup eventllistener added");document.addEventListener("keyup", select)});
-
+            submitButton.addEventListener("click", () => {
+                console.log("keyup eventllistener added");
+                document.addEventListener("keyup", select2);
+            });
+        }, 10*1000);
+    
     }
     else{
-        console.log("No such case.");
+        console.log("No such case")
     }
 
 }
-document.addEventListener("keyup", select);
+document.addEventListener("keyup", select2);
+
+// function select(e)
+// {
+//     console.log(e,e.key);
+//     if (document.getElementsByClassName(submitclass).length > 0){
+//         document.removeEventListener("keyup",select);
+//         console.log("keyup EventListener removed.");
+//         return;
+//     }
+//     if(!check()){
+//         return;
+//     }
+//     let k = e.key;
+//     console.log(`${k} pressed`);
+
+//     if(k === 'Enter'){
+//         let rsnSubmitBtn = document.getElementById(rsnSubmit);
+//         if(rsnSubmitBtn){
+//             rsnSubmitBtn.click();
+//             }
+//         return;
+//     }
+//     let ch = choice+String(map[k]);
+//     let rsn = sReason+String(String(map[k]));
+
+//     //for ease of use
+//     if(ch==="skip_radio_label_0"){
+//         ch = "skip_radio_label_4";}
+//     else if(ch==="skip_radio_label_4"){
+//         ch = "skip_radio_label_0";}
+
+
+//     let choiceBtn = document.getElementById(ch);
+//     let rsnBtn = document.getElementById(rsn);
+//     if(choiceBtn){
+//         choiceBtn.click();
+//         }
+//     else if(rsnBtn){
+//         rsnBtn.click();
+//         }
+//     else if(k==='j'){
+//         let skipBtn = document.getElementsByClassName(skipclass)[0];
+//         skipBtn.click();
+//         }
+//     else if(k==='k'){
+//         let ansButton = document.getElementsByClassName(ansclass)[0];
+//         ansButton.click();
+//         document.removeEventListener("keyup", select);
+//         setTimeout(() => {
+//             submitButton = document.getElementsByClassName(submitclass)[0];
+//             console.log(`submit button is ${submitButton}`);
+//         }, waitingSeconds*1000);
+//         submitButton.addEventListener("click", () => {console.log("keyup eventllistener added");document.addEventListener("keyup", select)});
+
+//     }
+//     else{
+//         console.log("No such case.");
+//     }
+
+// }
+
+// document.addEventListener("keyup", select);
 
 // function cases(k){
 //     if(k === 'Enter'){
